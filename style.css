@@ -1,0 +1,8 @@
+.traffic-light div {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: gray;
+  margin: 5px;
+}
+.active { opacity: 1; }
