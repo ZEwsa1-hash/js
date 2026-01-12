@@ -1,0 +1,24 @@
+body {
+  margin: 0 auto;
+  min-height: 100vh;
+  background-size: cover;        
+  background-position: center;
+  background-repeat: no-repeat; 
+}
+.gallery {
+  display: flex;
+  gap: 10px;
+}
+
+.gallery img {
+  width: 150px;
+  height: 100px;
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+
+.gallery img.active {
+  border-color: red;
+    object-fit: cover;   
+
+}
