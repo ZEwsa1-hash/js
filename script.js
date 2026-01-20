@@ -4,7 +4,6 @@ const userDetails = document.getElementById('user-details');
 let isLoading = false;
 let activeUserId = null;
 
-/* 1) загрузка всех пользователей */
 async function loadUsers() {
   isLoading = true;
 
@@ -23,7 +22,6 @@ async function loadUsers() {
   }
 }
 
-/* 2) отрисовка списка */
 function renderUsers(users) {
   usersList.innerHTML = '';
 
@@ -43,7 +41,6 @@ function renderUsers(users) {
   });
 }
 
-/* 3) загрузка деталей */
 async function loadUserDetails(id) {
   isLoading = true;
   lockUI(true);
@@ -66,7 +63,6 @@ async function loadUserDetails(id) {
   }
 }
 
-/* 4) отрисовка деталей */
 function renderUserDetails(user) {
   userDetails.innerHTML = `
     <strong>${user.name}</strong><br><br>
@@ -76,7 +72,6 @@ function renderUserDetails(user) {
   `;
 }
 
-/* подсветка активного пользователя */
 function setActiveUser(id) {
   activeUserId = id;
 
@@ -89,10 +84,8 @@ function setActiveUser(id) {
   });
 }
 
-/* блокировка UI */
 function lockUI(state) {
   usersList.classList.toggle('disabled', state);
 }
 
-/* старт */
 loadUsers();
