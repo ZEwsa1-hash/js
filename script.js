@@ -3,7 +3,7 @@ const detailsEl = document.getElementById('details');
 
 let isLoading = false;
 let map;
-let marker;
+let placemark;
 
 
 function fetchUsers() {
@@ -30,11 +30,12 @@ function fetchUserDetails(id) {
 }
 
 
-
 fetchUsers().then(users => {
   console.log('Всего пользователей:', users.length);
   renderUsers(users);
 });
+
+ymaps.ready(initMap);
 
 
 function renderUsers(users) {
@@ -80,18 +81,22 @@ function setDisabled(state) {
 
 
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 25.7617, lng: -80.1918 },
+  map = new ymaps.Map('map', {
+    center: [25.7617, -80.1918],
     zoom: 12
   });
 
-  marker = new google.maps.Marker({
-    map
-  });
+  placemark = new ymaps.Placemark(
+    [25.7617, -80.1918],
+    {},
+    { preset: 'islands-red-icon' }
+  );
+
+  map.geoObjects.add(placemark);
 }
 
 function updateMap(lat, lng) {
-  const position = { lat, lng };
-  marker.setPosition(position);
-  map.panTo(position);
+  const position = [lat, lng];
+  placemark.geometry.setCoordinates(position);
+  map.panTo(position, { flying: true });
 }
