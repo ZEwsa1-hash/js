@@ -1,91 +1,97 @@
-const usersList = document.getElementById('users-list');
-const userDetails = document.getElementById('user-details');
+const usersEl = document.getElementById('users');
+const detailsEl = document.getElementById('details');
 
 let isLoading = false;
-let activeUserId = null;
+let map;
+let marker;
 
-async function loadUsers() {
-  isLoading = true;
 
-  try {
-    const response = await fetch(
-      'https://jsonplaceholder.typicode.com/users'
-    );
-    const users = await response.json();
-
-    console.log('Всего пользователей:', users.length);
-    renderUsers(users);
-  } catch (error) {
-    usersList.innerHTML = '<li>Ошибка загрузки</li>';
-  } finally {
-    isLoading = false;
-  }
+function fetchUsers() {
+  return Promise.resolve([
+    { id: 1, name: 'Alex', lat: 25.7617, lng: -80.1918 },
+    { id: 2, name: 'Maria', lat: 25.7743, lng: -80.1937 },
+    { id: 3, name: 'John', lat: 25.7840, lng: -80.2101 }
+  ]);
 }
 
+function fetchUserDetails(id) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        id,
+        name: id === 1 ? 'Alex' : id === 2 ? 'Maria' : 'John',
+        email: 'user@mail.com',
+        phone: '+1 555 000',
+        lat: id === 1 ? 25.7617 : id === 2 ? 25.7743 : 25.7840,
+        lng: id === 1 ? -80.1918 : id === 2 ? -80.1937 : -80.2101
+      });
+    }, 1000);
+  });
+}
+
+
+
+fetchUsers().then(users => {
+  console.log('Всего пользователей:', users.length);
+  renderUsers(users);
+});
+
+
 function renderUsers(users) {
-  usersList.innerHTML = '';
+  usersEl.innerHTML = '';
 
   users.forEach(user => {
     const li = document.createElement('li');
     li.textContent = user.name;
-    li.dataset.id = user.id;
 
     li.addEventListener('click', () => {
       if (isLoading) return;
-
-      setActiveUser(user.id);
       loadUserDetails(user.id);
     });
 
-    usersList.appendChild(li);
+    usersEl.appendChild(li);
   });
 }
 
 async function loadUserDetails(id) {
   isLoading = true;
-  lockUI(true);
+  setDisabled(true);
+  detailsEl.textContent = 'Загрузка...';
 
-  userDetails.innerHTML =
-    '<p class="loading">Загрузка...</p>';
+  const user = await fetchUserDetails(id);
 
-  try {
-    const response = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${id}`
-    );
-    const user = await response.json();
-
-    renderUserDetails(user);
-  } catch (error) {
-    userDetails.textContent = 'Ошибка загрузки данных';
-  } finally {
-    isLoading = false;
-    lockUI(false);
-  }
-}
-
-function renderUserDetails(user) {
-  userDetails.innerHTML = `
-    <strong>${user.name}</strong><br><br>
-    Email: ${user.email}<br>
-    Phone: ${user.phone}<br>
-    City: ${user.address.city}
+  detailsEl.innerHTML = `
+    <strong>${user.name}</strong><br/>
+    Email: ${user.email}<br/>
+    Phone: ${user.phone}
   `;
+
+  updateMap(user.lat, user.lng);
+
+  isLoading = false;
+  setDisabled(false);
 }
 
-function setActiveUser(id) {
-  activeUserId = id;
-
-  const items = usersList.querySelectorAll('li');
-  items.forEach(item => {
-    item.classList.toggle(
-      'active',
-      Number(item.dataset.id) === id
-    );
+function setDisabled(state) {
+  document.querySelectorAll('#users li').forEach(li => {
+    li.classList.toggle('disabled', state);
   });
 }
 
-function lockUI(state) {
-  usersList.classList.toggle('disabled', state);
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 25.7617, lng: -80.1918 },
+    zoom: 12
+  });
+
+  marker = new google.maps.Marker({
+    map
+  });
 }
 
-loadUsers();
+function updateMap(lat, lng) {
+  const position = { lat, lng };
+  marker.setPosition(position);
+  map.panTo(position);
+}

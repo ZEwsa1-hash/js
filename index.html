@@ -2,23 +2,31 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Users</title>
+  <title>Users + Google Maps</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="container">
-    <div class="users">
-      <h2>Пользователи</h2>
-      <ul id="users-list"></ul>
-    </div>
-
-    <div class="details">
-      <h2>Детали</h2>
-      <div id="user-details">Выберите пользователя</div>
-    </div>
+<div class="container">
+  <div class="sidebar">
+    <h3>Пользователи</h3>
+    <ul id="users"></ul>
   </div>
 
-  <script src="script.js"></script>
+  <div class="content">
+    <div id="details">Выберите пользователя</div>
+    <div id="map"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+<!-- Google Maps -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"
+  async
+  defer
+></script>
+
 </body>
 </html>
