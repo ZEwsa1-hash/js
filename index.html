@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>World Clock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .clock {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .clock__label {
+      color: #555;
+      margin-right: 6px;
+    }
+
+    .clock__time {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="clock-ru" class="clock">
+    <span class="clock__label">Москва:</span>
+    <span class="clock__time"></span>
+  </div>
+
+  <div id="clock-us" class="clock">
+    <span class="clock__label">Майами:</span>
+    <span class="clock__time"></span>
+  </div>
+
+  <div id="clock-uk" class="clock">
+    <span class="clock__label">Лондон:</span>
+    <span class="clock__time"></span>
+  </div>
+
+  <div id="clock-jp" class="clock">
+    <span class="clock__label">Токио:</span>
+    <span class="clock__time"></span>
+  </div>
+
+  <script>
+    class Clock {
+      constructor({ elementId, locale, timeZone }) {
+        this.container = document.getElementById(elementId);
+        this.timeElement = this.container.querySelector('.clock__time');
+        this.formatter = new Intl.DateTimeFormat(locale, {
+          timeZone,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        this.timer = null;
+      }
+
+      render() {
+        this.timeElement.textContent =
+          this.formatter.format(new Date());
+      }
+
+      start() {
+        this.render();
+        this.timer = setInterval(() => this.render(), 1000);
+      }
+
+      stop() {
+        clearInterval(this.timer);
+      }
+    }
+
+    const clocks = [
+      new Clock({
+        elementId: 'clock-ru',
+        locale: 'ru-RU',
+        timeZone: 'Europe/Moscow'
+      }),
+      new Clock({
+        elementId: 'clock-us',
+        locale: 'en-US',
+        timeZone: 'America/New_York' // Майами
+      }),
+      new Clock({
+        elementId: 'clock-uk',
+        locale: 'en-GB',
+        timeZone: 'Europe/London'
+      }),
+      new Clock({
+        elementId: 'clock-jp',
+        locale: 'ja-JP',
+        timeZone: 'Asia/Tokyo'
+      })
+    ];
+
+    clocks.forEach(clock => clock.start());
+  </script>
+
+</body>
+</html>
